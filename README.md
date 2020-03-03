@@ -14,6 +14,7 @@
  **2.@RequestParm和@RequestParam之间的区别：** 
  
  在路径上的区别：一个是 ？键值对，一个是  /参数。
+ **@Parm注解**
  
  **3.OKHTTP**
  
@@ -49,4 +50,34 @@
  格式不对。然后通过postman将请求到的code以及一些参数带上，访问Github，获取token。
  获取的token格式正确无误，再次检查后发现。在将获取token的参数封装为dto对象时，
  参数名称写错了，改掉之后。正常。。。。
+ 
+ ## H2数据库
+ **1.H2数据库是一种单链接的数据库，每次只能一个连接**
+ 
+ **2.H2数据库连接失败，显示用户名和密码不对**
+ 解决方法：
+ 
+ Step1:
+ 使用脚本 
+ 
+ `a.create user if not exists sa password 123456`
+ 
+ `b.alter user sa admin true`
+ 
+ Step2:
+ 使用test测试数据库连接是否成功
+ 
+ **3.H2数据库**
+ 在IDEA中手动删除community02后，再次创建，发现发生错误，。之后使用rm ~/community02.* 删除成功，再次创建的时候创建成功。
+ 但是，这时候H2数据库不能显示schema，使用sql脚本才能看到。使用sql脚本也能查看到数据。
+ ## MyBatis整合SpringBoot的几种方式
+ **4.flyway**
+ 使用flyway的步骤：
+ step1：
+  引入flyway依赖：
+  
+ step2：清除之前创建的H2数据库(rm ~/community02.*)（如果不删除，可以增加配置类进行配置，这种没有尝试）。
+ 
+ step3：使用命令执行数据库脚本(mvn flyway:migrate)
+ 
  
