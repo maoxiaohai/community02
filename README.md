@@ -80,4 +80,9 @@
  
  step3：使用命令执行数据库脚本(mvn flyway:migrate)
  
- 
+## 一次错误记录
+```java
+    @Insert("insert into question(title,description,gmt_create,gmt_modified,creator,tag) values(#{title},#{description},#{gmt_create},#{gmt_modified},#{creator},#{tag})")
+    public void insert(Question question);
+```
+数据库字段为gmt_create、gmt_modified。之前使用的是驼峰命名法，出现错误，不能和model类匹配成功。修改之后未报错。在配置文件中开启驼峰命名也不起作用。

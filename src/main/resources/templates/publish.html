@@ -31,6 +31,9 @@
                 <ul class="nav navbar-nav navbar-right">
 
                     <li th:if="${session.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=Iv1.96ba758b7fed9591&redirect_uri=http://localhost:8088/callback&scope=user&state=1">登录</a></li>
+                   <li th:if="${session.user!=null}">
+                       <a href="/publish"> 发布</a>
+                   </li>
                     <li th:if="${session.user!=null}" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -48,20 +51,30 @@
             <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
                 <h2> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
                 <hr>
-                <form>
+                <form action="/publish" method="post">
                     <div class="form-group">
                         <label for="title">问题标题（简单扼要）</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="问题标题。。">
+                        <input type="text" th:value="${title}" class="form-control" id="title" name="title" placeholder="问题标题。。">
                     </div>
                     <div class="form-group">
                         <label for="description">问题补充（必填，参考提示）</label>
-                        <textarea name="description" id="description" class="form-control" cols="30" rows="10"></textarea>
+                        <textarea name="description" th:value="${description}" id="description" class="form-control" cols="30" rows="10"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="title">添加标签</label>
-                        <input type="text" class="form-control" id="tag" name="tag" placeholder="添加标签，以,分割">
+                        <label for="tag">添加标签</label>
+                        <input type="text" th:value="${tag}" class="form-control" id="tag" name="tag" placeholder="添加标签，以,分割">
                     </div>
-                    <button type="submit" class="btn btn-success btn-publish">发布</button>
+
+
+                    <div class="container-fluid main">
+                        <div class="row">
+                            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                                <span class="alert alert-danger col-lg-9 col-md-12 col-sm-12 col-xs-12" th:text="${error}" th:if="${error}!=null"></span>
+                                <button type="submit" class="btn btn-success btn-publish">发布</button>
+                            </div>
+
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
