@@ -42,10 +42,10 @@ public class AuthorizeController {
                            HttpServletResponse response){
 
         AccesstokenDTO accesstoken = new AccesstokenDTO();
-        accesstoken.setClient__id(client_id);
+        accesstoken.setClient_id(client_id);
         accesstoken.setClient_secret(client_secret);
         accesstoken.setCode(code);
-        accesstoken.setRedirct_uri(redirct_uri);
+        accesstoken.setRedirect_uri(redirct_uri);
         accesstoken.setState(state);
         //get token
         String token = githubProvider.getAccessToken(accesstoken);
