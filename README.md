@@ -86,3 +86,41 @@
     public void insert(Question question);
 ```
 数据库字段为gmt_create、gmt_modified。之前使用的是驼峰命名法，出现错误，不能和model类匹配成功。修改之后未报错。在配置文件中开启驼峰命名也不起作用。
+## 一次错误记录
+问题描述：完善首页列表功能时，为用户显示头像，改变头像的大小，在community02.css中写上样式，但是重启项目后样式没有起作用。
+问题解决：第二天IDEA重启后，发现问题自然而然解决掉了。(经过测试，发现是浏览器缓存问题，Ctrl+F5强制刷新解决问题)
+
+问题描述：在UserMapper中编写接口：
+```java
+@Select("SELECT * FROM  user where id=#{id}")
+public User findById(@Param("id") Integer id);
+```
+接着在QuestionService中编写
+```java
+ User user = userMapper.findById(question.getCreator());
+```
+其中User对象属性如下：
+```java
+    private Integer id;
+    private String name;
+    private String accountId;
+    private String token;
+    private Long gmtCreate;
+    private Long gmtModified;
+    private String avatarUrl;
+```
+数据库中的属性如下：
+```sql
+    id int auto_increment primary key not null,
+    account_id varchar(100),
+    name varchar(50),
+    token varchar(36),
+    gmt_create bigint,
+    gmt_modified bigint
+```
+执行后发现user对象中驼峰命名的属性值为null
+解决方案：在application.properties中加上配置
+```properties
+mybatis.configuration.mapUnderscoreToCamelCase=true
+```
+问题解决。
