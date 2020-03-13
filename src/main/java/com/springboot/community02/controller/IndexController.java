@@ -38,6 +38,10 @@ public class IndexController {
             }
         }
         List<QuestionDTO> questionList=questionService.list();
+        for (QuestionDTO qu:questionList
+             ) {
+            qu.setDescription("des1221");
+        }
         model.addAttribute("questions",questionList);
         return "index";
     }
