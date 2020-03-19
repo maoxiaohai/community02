@@ -124,3 +124,5 @@ public User findById(@Param("id") Integer id);
 mybatis.configuration.mapUnderscoreToCamelCase=true
 ```
 问题解决。
+## devtool
+导入devtool依赖进来后，开启自动编译，发现还是不能实现热部署
