@@ -12,7 +12,7 @@ public interface UserMapper {
     public void insert(User user);
 
     @Select("SELECT * FROM  user where token=#{token}")
-    public User findByToken(@Param("token") String token);
+    public User findByToken( String token);
     @Select("SELECT * FROM  user where id=#{id}")
-    public User findById(@Param("id") Integer id);
+    public User findById(Integer id);
 }

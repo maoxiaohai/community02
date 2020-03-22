@@ -126,3 +126,36 @@ mybatis.configuration.mapUnderscoreToCamelCase=true
 问题解决。
 ## devtool
 导入devtool依赖进来后，开启自动编译，发现还是不能实现热部署
+## mapper接口中方法参数(@Param)
+QuestionMapper中
+```java
+@Select("select * from question limit #{offset},#{size}")
+List<Question> list(Integer offset, Integer size);
+``` 
+这里list方法中参数不是map和对象类型，但是没有使用@Param，照样没有报错，并且起效。(个人感觉@Param注解的作用就是为参数命名)
+
+[Mybatis官网](https://mybatis.org/mybatis-3/zh/java-api.html)
+
+## 访问 /profile/question界面布局乱掉了
+```html
+    <script src="Jquery.jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="bootstrap3.3.7/css/bootstrap.css"/>
+    <link rel="stylesheet" href="bootstrap3.3.7/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="bootstrap3.3.7/css/community02.css"/>
+    <script type="application/javascript"  src="bootstrap3.3.7/js/bootstrap.js"></script>
+```
+首先，界面布局乱了，首先猜到的是样式可能没有加载成功，然后按F12，检查发现确实是样式加载失败。
+以上是profile.html文件中加载样式的语句，样式文件都是在的，没有丢失。然后，在地址框中输入localhost:8088/profile/Jquery.jquery-3.4.1.min.js,发现加载失败。
+说明是样式文件的路径不对。然后，在输入localhost:8088/Jquery.jquery-3.4.1.min.js,发现加载成功。
+解决：
+修改样式文件路径如下：
+```html
+    <script src="/Jquery.jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap3.3.7/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/bootstrap3.3.7/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/bootstrap3.3.7/css/community02.css"/>
+    <script type="application/javascript"  src="/bootstrap3.3.7/js/bootstrap.js"></script>
+```
+页面加载成功。
+貌似是访问路径profile/quesion是两级路径，而刚开始是当前路径下查找样式文件，所以找不到出错。
+最后解决是到根目录('/')下去找。

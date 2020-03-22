@@ -2,6 +2,7 @@ package com.springboot.community02.dto;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,11 +13,12 @@ public class PaginationDTO {
     private boolean showNext;
     private boolean showEnd;
     private Integer page;
-    private List<Integer> pages;
-
+    private List<Integer> pages=new ArrayList<>();
+    private Integer totalPage;
 
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-        Integer totalPage = 0;
+        this.page=page;
+        //Integer totalPage = 0;
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -26,10 +28,10 @@ public class PaginationDTO {
         pages.add(page);
         for (int i = 1; i <= 3; i++) {
             if (page - i > 0) {
-                pages.add(page - i, 0);
+                pages.add(0, page - i);
             }
-            if (page + 1 <= totalPage) {
-                pages.add(page + 1);
+            if (page + i <= totalPage) {
+                pages.add(page + i);
             }
 
         }

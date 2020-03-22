@@ -23,13 +23,17 @@ import java.util.List;
 public class IndexController {
     @Autowired
     UserMapper userMapper;
+
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    QuestionMapper questionMapper;
     @GetMapping("/")
     public String Index(HttpServletRequest request,
                         Model model,
                         @RequestParam(value = "page", defaultValue = "1") Integer page,
-                        @RequestParam(value = "size", defaultValue = "5") Integer size) {
+                        @RequestParam(value = "size", defaultValue = "2") Integer size) {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null&&cookies.length>1)
         for (Cookie cookie : cookies) {
@@ -42,6 +46,7 @@ public class IndexController {
                 break;
             }
         }
+        List<Question> list = questionMapper.list(0, 5);
         PaginationDTO pagination = questionService.list(page,size);
         model.addAttribute("pagination", pagination);
 
