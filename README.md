@@ -159,3 +159,38 @@ List<Question> list(Integer offset, Integer size);
 页面加载成功。
 貌似是访问路径profile/quesion是两级路径，而刚开始是当前路径下查找样式文件，所以找不到出错。
 最后解决是到根目录('/')下去找。
+
+## 源码解读，分析使用@EnableWebMvc不能加载静态资源的问题
+添加拦截器Interception优化Session部分功能后，重新打开网站，发现网站样式不能正常加载了。根据视屏讲解，注释掉@EnableWebMvc
+后，发现样式正常加载。根据码匠的讲解，是WebMvcAutoConfiguration类中的addResourceHandlers方法没有运行起来。
+原因是
+```java
+@Configuration(
+    proxyBeanMethods = false
+)
+@ConditionalOnWebApplication(
+    type = Type.SERVLET
+)
+@ConditionalOnClass({Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class})
+@ConditionalOnMissingBean({WebMvcConfigurationSupport.class})
+@AutoConfigureOrder(-2147483638)
+@AutoConfigureAfter({DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class, ValidationAutoConfiguration.class})
+public class WebMvcAutoConfiguration {
+```
+而注解@EnableWebMvc
+```java 
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+@Documented
+@Import({DelegatingWebMvcConfiguration.class})
+public @interface EnableWebMvc {
+}
+```
+其中DelegatingWebMvcConfiguration：
+```java
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+```
+综上所述，由于使用注解EnableWebMvc，导致类WebMvcAutoConfiguration没有自动加载。
+
+但是发现。类WebMvcConfigurer其他的实现类中的addResourceHandles方法遍历执行了WebConfiguer的addResourceHandle方法，所以，猜想，如果在自定义的webConfig类中实现addResourceHandles方法，是不是也可以加载静态资源。
+然后根据WebMvcAutoConfiguration类中的addResourceHandles方法格式，编写方法。测试通过，不需要注释掉@EnableWebMvc.
