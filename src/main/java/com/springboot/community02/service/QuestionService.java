@@ -21,7 +21,7 @@ public class QuestionService {
     private UserMapper userMapper;
     public PaginationDTO list(Integer page, Integer size){
         if (page < 1) page = 1;
-        Integer offset = page * (size - 1);
+        Integer offset = size * (page - 1);
         List<Question> questionList = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -45,5 +45,17 @@ public class QuestionService {
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+    public void insertOrUpdate(Question question) {
+        //第一次创建
+        if(question.getId()==null){
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
+        }else{
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.update(question);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.springboot.community02.dto.GithubUser;
 import com.springboot.community02.mapper.UserMapper;
 import com.springboot.community02.model.User;
 import com.springboot.community02.provider.GithubProvider;
+import com.springboot.community02.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,8 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirct_uri;
 
+    @Autowired
+    private UserService userService;
     @GetMapping("callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
@@ -67,9 +70,21 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.insertOrUpdate(user);
+            //不需要每次都更新数据库
+            //userMapper.insert(user);
             
         }
         return "redirect:/";
     }
+    @GetMapping("logout")
+    public String logout(HttpServletRequest req,
+                         HttpServletResponse res){
+        req.getSession().removeAttribute("user");
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0);
+        res.addCookie(token);
+        return "redirect:/";
+    }
+
 }

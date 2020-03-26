@@ -1,10 +1,9 @@
 package com.springboot.community02.mapper;
 
 import com.springboot.community02.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -15,4 +14,10 @@ public interface UserMapper {
     public User findByToken( String token);
     @Select("SELECT * FROM  user where id=#{id}")
     public User findById(Integer id);
+
+    @Select("SELECT * FROM  user where account_id=#{accountId}")
+    List<User> getByAccountId(String accountId);
+
+    @Update("update user set name=#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl} where id=#{id}")
+    void update(User user);
 }
