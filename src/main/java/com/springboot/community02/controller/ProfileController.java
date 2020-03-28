@@ -35,7 +35,7 @@ public class ProfileController {
                           @RequestParam(value = "page", defaultValue = "1") Integer page,
                           @RequestParam(value = "size", defaultValue = "2") Integer size,
                           Model model) {
-        List<Question> list = questionMapper.list(0, 5);
+        //List<Question> list = questionMapper.list(0, 5);
         PaginationDTO pagination = questionService.list(page,size);
         model.addAttribute("pagination", pagination);
 

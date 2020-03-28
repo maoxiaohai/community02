@@ -2,6 +2,7 @@ package com.springboot.community02.service;
 
 import com.springboot.community02.mapper.UserMapper;
 import com.springboot.community02.model.User;
+import com.springboot.community02.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,12 @@ public class UserService {
     private UserMapper userMapper;
 
     public void insertOrUpdate(User user) {
-        List<User> list=userMapper.getByAccountId(user.getAccountId());
+        UserExample example = new UserExample();
+        example.createCriteria()
+                .andAccountIdEqualTo(user.getAccountId());
+        List<User> list=userMapper.selectByExample(example);
+
+        //List<User> list=userMapper.getByAccountId(user.getAccountId());
         User dbUser=null;
         if(list.size()>1)dbUser=list.get(0);
         //= userMapper.getByAccountId(user.getAccountId());
@@ -28,7 +34,12 @@ public class UserService {
             dbUser.setAvatarUrl(user.getAvatarUrl());
             dbUser.setName(user.getName());
             dbUser.setToken(user.getToken());
-            userMapper.update(dbUser);
+            UserExample userExample = new UserExample();
+            userExample.createCriteria()
+                    .andIdEqualTo(dbUser.getId());
+            userMapper.updateByExampleSelective(dbUser, userExample);
+            //userMapper.updateByPrimaryKey(dbUser);
+            //userMapper.update(dbUser);
 
         }
     }

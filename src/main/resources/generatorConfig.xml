@@ -2,7 +2,9 @@
         "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <context id="simple" targetRuntime="MyBatis3Simple">
+    <context id="simple" targetRuntime="MyBatis3">
+        <!--Mybatis自带分页插件        -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
         <jdbcConnection driverClass="org.h2.Driver"
                         connectionURL="jdbc:h2:~/community02"
                         userId="sa"
@@ -21,5 +23,6 @@
         </javaClientGenerator>
 
         <table tableName="user" />
+        <table tableName="question"></table>
     </context>
 </generatorConfiguration>

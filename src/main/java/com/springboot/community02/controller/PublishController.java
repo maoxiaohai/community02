@@ -4,6 +4,7 @@ import com.springboot.community02.mapper.QuestionMapper;
 import com.springboot.community02.mapper.UserMapper;
 import com.springboot.community02.model.Question;
 import com.springboot.community02.model.User;
+import com.springboot.community02.model.UserExample;
 import com.springboot.community02.service.QuestionService;
 import com.springboot.community02.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class PublishController {
@@ -32,7 +34,8 @@ public class PublishController {
     @GetMapping("/publish/{id}")
     public String publish(@PathVariable("id")Integer id,
                           Model model){
-        Question question=questionMapper.getById(id);
+        Question question=questionMapper.selectByPrimaryKey(id);
+        //Question question=questionMapper.getById(id);
         model.addAttribute("title",question.getTitle());
         model.addAttribute("description",question.getDescription());
         model.addAttribute("tag",question.getTag());
@@ -71,7 +74,13 @@ public class PublishController {
         for(Cookie cookie:cookies){
             if(cookie.getName().equals("token")){
                 String token = cookie.getValue();
-                user=userMapper.findByToken(token);
+
+                UserExample example = new UserExample();
+                example.createCriteria()
+                        .andTokenEqualTo(token);
+                List<User> users=userMapper.selectByExample(example);
+                if(users.size()>0)user=users.get(0);
+                //user=userMapper.findByToken(token);
                 if(user!=null){
                     request.getSession().setAttribute("user",user.getName());
                 }

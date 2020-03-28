@@ -5,6 +5,7 @@ import com.springboot.community02.mapper.QuestionMapper;
 import com.springboot.community02.mapper.UserMapper;
 import com.springboot.community02.model.Question;
 import com.springboot.community02.model.User;
+import com.springboot.community02.model.UserExample;
 import com.springboot.community02.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,13 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
+
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if(users.size()>0)user=users.get(0);
+                    //user = userMapper.findByToken(token);
                     if (user != null) {
                         request.getSession().setAttribute("user", user.getName());
                     }
