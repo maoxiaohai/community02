@@ -2,6 +2,7 @@ package com.springboot.community02.service;
 
 import com.springboot.community02.dto.PaginationDTO;
 import com.springboot.community02.dto.QuestionDTO;
+import com.springboot.community02.mapper.QuestionExtMapper;
 import com.springboot.community02.mapper.QuestionMapper;
 import com.springboot.community02.mapper.UserMapper;
 import com.springboot.community02.model.Question;
@@ -21,6 +22,9 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
+
     public PaginationDTO list(Integer page, Integer size){
         if (page < 1) page = 1;
         Integer offset = size * (page - 1);
@@ -78,4 +82,11 @@ public class QuestionService {
             //questionMapper.update(question);
         }
     }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        questionExtMapper.incView(question);
+    }
+
 }
